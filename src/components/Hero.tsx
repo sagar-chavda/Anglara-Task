@@ -40,13 +40,11 @@ export default function Hero() {
         </div>
 
         {/* Image */}
-        <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px]">
-          <Image
+        <div className="relative w-full h-[250px] sm:h-[400px] md:h-[500px]">
+          <img
             src="/hero.webp"
             alt="Fashion"
-            fill
-            className="object-contain"
-            priority
+            className="object-contain "
           />
         </div>
       </div>
