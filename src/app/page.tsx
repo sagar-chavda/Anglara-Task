@@ -2,52 +2,52 @@ import Hero from "@/src/components/Hero";
 import ProductSection from "@/src/components/ProductSection";
 import { Product } from "@/src/types/product";
 
-export const dynamic = "force-dynamic"; // ✅ ADD THIS
-
 async function getProducts(): Promise<Product[]> {
   try {
     const res = await fetch("https://fakestoreapi.com/products", {
-      cache: "no-store", // ✅ ADD THIS
+      cache: 'no-store', 
+      next: { revalidate: 0 }
     });
-
+    
     if (!res.ok) {
-      console.error("API failed:", res.status);
+      console.error('API fetch failed:', res.status);
       return [];
     }
-
+    
     const data = await res.json();
-    return Array.isArray(data) ? data : [];
+    return data;
   } catch (error) {
-    console.error("Fetch error:", error);
-    return [];
+    console.error('Error fetching products:', error);
+    return []; 
   }
 }
 
 export default async function Home() {
   const products = await getProducts();
-
-  if (!products || products.length === 0) {
-    return (
-      <>
-        <Hero />
-        <div className="text-center py-10">
-          Products are temporarily unavailable.
-        </div>
-      </>
-    );
-  }
+  console.log('Products loaded:', products.length);
 
   return (
     <>
       <Hero />
-      <ProductSection
-        title="NEW ARRIVALS"
-        products={products.slice(0, 4)}
-      />
-      <ProductSection
-        title="TOP SELLING"
-        products={products.slice(4, 8)}
-      />
+      {products.length > 0 ? (
+        <>
+          <ProductSection
+            title="NEW ARRIVALS"
+            products={products.slice(0, 4)}
+          />
+          <ProductSection
+            title="TOP SELLING"
+            products={products.slice(4, 8)}
+          />
+        </>
+      ) : (
+        <div className="text-center py-20">
+          <p className="text-xl text-gray-600">Loading products...</p>
+        </div>
+      )}
     </>
   );
 }
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
