@@ -2,9 +2,21 @@ import Hero from "@/src/components/Hero";
 import ProductSection from "@/src/components/ProductSection";
 import { Product } from "@/src/types/product";
 
-async function getProducts(): Promise<Product[]> {
-  const res = await fetch("https://fakestoreapi.com/products");
-  return res.json();
+export const dynamic = "force-dynamic"; // ✅ ADD THIS
+
+async function getProducts() {
+  try {
+    const res = await fetch("https://fakestoreapi.com/products", {
+      cache: "no-store",
+    });
+
+    if (!res.ok) return [];
+
+    return await res.json();
+  } catch (error) {
+    console.error("API Error:", error);
+    return [];
+  }
 }
 
 export default async function Home() {
