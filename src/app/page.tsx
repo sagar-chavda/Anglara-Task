@@ -10,11 +10,15 @@ async function getProducts() {
       cache: "no-store",
     });
 
-    if (!res.ok) return [];
+    if (!res.ok) {
+      console.error("API failed:", res.status);
+      return [];
+    }
 
-    return await res.json();
+    const data = await res.json();
+    return Array.isArray(data) ? data : [];
   } catch (error) {
-    console.error("API Error:", error);
+    console.error("Fetch error:", error);
     return [];
   }
 }
